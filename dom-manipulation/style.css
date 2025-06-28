@@ -1,0 +1,45 @@
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+  }
+  
+  h1 {
+    color: #444;
+    text-align: center;
+  }
+  
+  #quoteDisplay {
+    padding: 20px;
+    margin: 20px 0;
+    background-color: #fff;
+    border-left: 5px solid #007BFF;
+    font-size: 1.2em;
+  }
+  
+  button {
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  input[type="text"], select {
+    padding: 10px;
+    margin: 5px;
+    width: 200px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .form-section, .filter-section, .import-export-section {
+    margin-top: 20px;
+  }
