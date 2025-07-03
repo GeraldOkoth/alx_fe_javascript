@@ -26,7 +26,7 @@ function saveQuotes() {
 
 const CreateQuoteForm = document.getElementById("CreateQuoteForm");
 
-// add quote form
+// function to create quote form
 function createAddQuoteForm() {
   if (formRendered) return;
   const div = document.createElement("div");
@@ -52,11 +52,11 @@ function createAddQuoteForm() {
   div.appendChild(newQuoteText);
   div.appendChild(newQuoteCategory);
   div.appendChild(addButton);
-  
 
   section.appendChild(div);
 }
 
+// calling createAddQuoteForm to render the form on page load
 CreateQuoteForm.addEventListener("click", () => {
   createAddQuoteForm();
   formRendered = true;
