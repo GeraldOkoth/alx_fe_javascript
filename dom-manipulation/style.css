@@ -1,45 +1,69 @@
+*,
+*:before,
+*:after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    padding: 20px;
-    background-color: #f4f4f4;
-    color: #333;
-  }
-  
-  h1 {
-    color: #444;
-    text-align: center;
-  }
-  
-  #quoteDisplay {
-    padding: 20px;
-    margin: 20px 0;
-    background-color: #fff;
-    border-left: 5px solid #007BFF;
-    font-size: 1.2em;
-  }
-  
-  button {
-    background-color: #007BFF;
-    color: #fff;
-    border: none;
-    padding: 10px 15px;
-    margin: 5px;
-    cursor: pointer;
-    border-radius: 4px;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
-  input[type="text"], select {
-    padding: 10px;
-    margin: 5px;
-    width: 200px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  .form-section, .filter-section, .import-export-section {
-    margin-top: 20px;
-  }
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+  line-height: 1.6;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  height: 100vh;
+  margin: 2rem 0;
+}
+
+.section {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+}
+.section .input-container {
+  display: flex;
+  margin-bottom: 1rem;
+}
+.section .input-container input[type=text] {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 0.5rem;
+}
+.section .input-container button {
+  padding: 0.5rem 1rem;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.section .input-container button:hover {
+  background-color: #218838;
+}
+.section #newQuote {
+  padding: 0.5rem 1rem;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.section #quoteDisplay .list-item {
+  list-style-type: none;
+  padding: 1rem;
+  border-radius: 5px;
+  margin: 1rem 0;
+  background-color: #f1f1f1;
+}
+
+/*# sourceMappingURL=style.css.map */
