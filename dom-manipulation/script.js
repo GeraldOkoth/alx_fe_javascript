@@ -1,6 +1,7 @@
 const quoteDisplay = document.getElementById("quoteDisplay");
 
 // quote objects
+let quoteArray = ["text", "category"];
 let quotes = JSON.parse(localStorage.getItem("quotes")) || [
   {
     text: "The best way to predict the future is to create it.",
