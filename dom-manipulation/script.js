@@ -101,19 +101,19 @@ function addQuote() {
 // }
 
 // function to show random quotes
-// function showRandomQuote() {
-//   const filter = localStorage.getItem("filter") || "all";
-//   const filtered =
-//     filter === "all" ? quotes : quotes.filter((q) => q.quoteCategory === filter);
-//   if (filtered.length === 0) {
-//     quoteDisplay.innerText = "No quotes found in this category.";
-//     return;
-//   }
-//   const random = filtered[Math.floor(Math.random() * filtered.length)];
-//   quoteDisplay.innerText = `${random.quote} — ${random.quoteCategory}`;
-// }
+function showRandomQuote() {
+  const filter = localStorage.getItem("filter") || "all";
+  const filtered =
+    filter === "all" ? quotes : quotes.filter((q) => q.quoteCategory === filter);
+  if (filtered.length === 0) {
+    quoteDisplay.innerText = "No quotes found in this category.";
+    return;
+  }
+  const random = filtered[Math.floor(Math.random() * filtered.length)];
+  quoteDisplay.innerText = `${random.quote} — ${random.quoteCategory}`;
+}
 
-// document.getElementById("newQuote").addEventListener("click", showRandomQuote);
+document.getElementById("newQuote").addEventListener("click", showRandomQuote);
 
 // function filterQuotes() {
 //   const category = document.getElementById("categoryFilter").value;
