@@ -58,6 +58,10 @@ body {
   #newQuote {
     @include button;
   }
+  #CreateQuoteForm {
+    @include button;
+    margin: 1rem 0;
+  }
   #quoteDisplay .list-item {
     list-style-type: none;
     padding: 1rem;

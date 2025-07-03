@@ -1,4 +1,6 @@
 const quoteDisplay = document.getElementById("quoteDisplay");
+const section = document.querySelector(".section");
+let formRendered = false;
 
 // quote objects
 let quoteArray = ["text", "category"];
@@ -21,6 +23,44 @@ let quotes = JSON.parse(localStorage.getItem("quotes")) || [
 function saveQuotes() {
   localStorage.setItem("quotes", JSON.stringify(quotes));
 }
+
+const CreateQuoteForm = document.getElementById("CreateQuoteForm");
+
+// add quote form
+function createAddQuoteForm() {
+  if (formRendered) return;
+  const div = document.createElement("div");
+  div.classList.add("input-container");
+
+  const newQuoteText = document.createElement("input");
+  newQuoteText.type = "text";
+  newQuoteText.id = "newQuoteText";
+  newQuoteText.placeholder = "Enter new quote";
+
+  const newQuoteCategory = document.createElement("input");
+  newQuoteCategory.type = "text";
+  newQuoteCategory.id = "newQuoteCategory";
+  newQuoteCategory.placeholder =
+    "Enter quote category (e.g., Inspiration, Motivation)";
+
+  const addButton = document.createElement("button");
+  addButton.type = "button";
+  addButton.id = "newQuote";
+  addButton.textContent = "Add Quote";
+  addButton.onclick = addQuote;
+
+  div.appendChild(newQuoteText);
+  div.appendChild(newQuoteCategory);
+  div.appendChild(addButton);
+  
+
+  section.appendChild(div);
+}
+
+CreateQuoteForm.addEventListener("click", () => {
+  createAddQuoteForm();
+  formRendered = true;
+});
 
 // function to add new quotes
 function addQuote() {
