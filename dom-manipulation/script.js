@@ -81,7 +81,9 @@ function addQuote() {
     quoteInput.value = "";
     categoryInput.value = "";
     // Update categories dropdown if new category is introduced
-    if (![...categoryFilter.options].some(opt => opt.value === quoteCategory)) {
+    if (
+      ![...categoryFilter.options].some((opt) => opt.value === quoteCategory)
+    ) {
       const option = document.createElement("option");
       option.value = quoteCategory;
       option.textContent = quoteCategory;
@@ -174,13 +176,13 @@ async function fetchQuotesFromServer() {
     const response = await fetch(API_URL + "?_limit=5");
     const data = await response.json();
     // Map mock API data to quote format
-    const apiQuotes = data.map(item => ({
+    const apiQuotes = data.map((item) => ({
       text: item.title,
-      category: "API"
+      category: "API",
     }));
     // Add only new quotes
-    apiQuotes.forEach(apiQuote => {
-      if (!quotes.some(q => q.text === apiQuote.text)) {
+    apiQuotes.forEach((apiQuote) => {
+      if (!quotes.some((q) => q.text === apiQuote.text)) {
         quotes.push(apiQuote);
       }
     });
@@ -201,8 +203,8 @@ async function postQuoteToAPI(quote) {
       body: JSON.stringify({
         title: quote.text,
         body: quote.category,
-        userId: 1
-      })
+        userId: 1,
+      }),
     });
     // No need to handle response for mock
   } catch (err) {
@@ -232,13 +234,13 @@ async function syncQuotesWithServer() {
   try {
     const response = await fetch(API_URL + "?_limit=5");
     const serverData = await response.json();
-    const serverQuotes = serverData.map(item => ({
+    const serverQuotes = serverData.map((item) => ({
       text: item.title,
-      category: "API"
+      category: "API",
     }));
 
     // Remove all local quotes with category "API"
-    quotes = quotes.filter(q => q.category !== "API");
+    quotes = quotes.filter((q) => q.category !== "API");
 
     // Add server quotes (server takes precedence)
     quotes.push(...serverQuotes);
@@ -297,7 +299,7 @@ function showNotification(message, type = "info", actions = []) {
 
 // Notify on successful sync or update
 function notifyDataUpdated() {
-  showNotification("Quotes updated from server.", "success");
+  showNotification("Quotes synced with server.", "success");
 }
 
 // Conflict resolution UI
@@ -323,21 +325,25 @@ function resolveConflicts(localConflicts, serverConflicts) {
         {
           label: "Keep Local",
           onClick: () => {
-            quotes = quotes.filter(q => !(q.text === server.text && q.category === server.category));
+            quotes = quotes.filter(
+              (q) => !(q.text === server.text && q.category === server.category)
+            );
             quotes.push(local);
             index++;
             showNextConflict();
-          }
+          },
         },
         {
           label: "Keep Server",
           onClick: () => {
-            quotes = quotes.filter(q => !(q.text === local.text && q.category === local.category));
+            quotes = quotes.filter(
+              (q) => !(q.text === local.text && q.category === local.category)
+            );
             quotes.push(server);
             index++;
             showNextConflict();
-          }
-        }
+          },
+        },
       ]
     );
   }
@@ -349,17 +355,19 @@ async function enhancedSyncQuotesWithServer() {
   try {
     const response = await fetch(API_URL + "?_limit=5");
     const serverData = await response.json();
-    const serverQuotes = serverData.map(item => ({
+    const serverQuotes = serverData.map((item) => ({
       text: item.title,
-      category: "API"
+      category: "API",
     }));
 
     // Find conflicts: same text, different category
-    const localAPIQuotes = quotes.filter(q => q.category === "API");
+    const localAPIQuotes = quotes.filter((q) => q.category === "API");
     const conflicts = [];
     const serverConflicts = [];
-    localAPIQuotes.forEach(localQ => {
-      const match = serverQuotes.find(sq => sq.text === localQ.text && sq.category !== localQ.category);
+    localAPIQuotes.forEach((localQ) => {
+      const match = serverQuotes.find(
+        (sq) => sq.text === localQ.text && sq.category !== localQ.category
+      );
       if (match) {
         conflicts.push(localQ);
         serverConflicts.push(match);
@@ -367,11 +375,11 @@ async function enhancedSyncQuotesWithServer() {
     });
 
     // Remove all local API quotes
-    quotes = quotes.filter(q => q.category !== "API");
+    quotes = quotes.filter((q) => q.category !== "API");
 
     // Add server quotes (server takes precedence unless conflict)
-    serverQuotes.forEach(sq => {
-      if (!conflicts.some(c => c.text === sq.text)) {
+    serverQuotes.forEach((sq) => {
+      if (!conflicts.some((c) => c.text === sq.text)) {
         quotes.push(sq);
       }
     });
@@ -383,8 +391,8 @@ async function enhancedSyncQuotesWithServer() {
         [
           {
             label: "Resolve Now",
-            onClick: () => resolveConflicts(conflicts, serverConflicts)
-          }
+            onClick: () => resolveConflicts(conflicts, serverConflicts),
+          },
         ]
       );
     } else {
