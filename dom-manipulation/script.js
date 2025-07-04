@@ -72,7 +72,7 @@ function addQuote() {
   if (!(quote && quoteCategory)) {
     alert("Please fill in quote and category fields");
   } else {
-    quotes.push({ quote, quoteCategory });
+    quotes.push({ text: quote, category: quoteCategory });
     const list = document.createElement("li");
     list.classList.add("list-item");
     list.textContent = `${quote}: ${quoteCategory}`;
@@ -80,23 +80,29 @@ function addQuote() {
     saveQuotes();
     quoteInput.value = "";
     categoryInput.value = "";
+    // Update categories dropdown if new category is introduced
+    if (![...categoryFilter.options].some(opt => opt.value === quoteCategory)) {
+      const option = document.createElement("option");
+      option.value = quoteCategory;
+      option.textContent = quoteCategory;
+      categoryFilter.appendChild(option);
+    }
     alert("Quote added succesfully!");
   }
 }
 
+const categoryFilter = document.getElementById("categoryFilter");
 function populateCategories() {
   const uniqueCategories = [...new Set(quotes.map((q) => q.category))];
   const lastSelected = localStorage.getItem("filter") || "all";
-  quoteDisplay.innerHTML =
-    '<option value="all">All Categories</option>' +
-    uniqueCategories
-      .map(
-        (cat) =>
-          `<option value="${cat}" ${
-            lastSelected === cat ? "selected" : ""
-          }>${cat}</option>`
-      )
-      .join("");
+  categoryFilter.innerHTML += uniqueCategories
+    .map(
+      (cat) =>
+        `<option value="${cat}" ${
+          lastSelected === cat ? "selected" : ""
+        }>${cat}</option>`
+    )
+    .join("");
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -108,7 +114,9 @@ document.addEventListener("DOMContentLoaded", () => {
 function showRandomQuote() {
   const filter = localStorage.getItem("filter") || "all";
   const filtered =
-    filter === "all" ? quotes : quotes.filter((q) => q.quoteCategory === filter);
+    filter === "all"
+      ? quotes
+      : quotes.filter((q) => q.quoteCategory === filter);
   if (filtered.length === 0) {
     quoteDisplay.innerText = "No quotes found in this category.";
     return;
@@ -126,7 +134,7 @@ function filterQuotes() {
 }
 
 const exportQuote = document.getElementById("exportQuote");
-exportQuote;addEventListener("click", exportToJsonFile);
+exportQuote.addEventListener("click", exportToJsonFile);
 function exportToJsonFile() {
   const blob = new Blob([JSON.stringify(quotes, null, 2)], {
     type: "application/json",
@@ -158,5 +166,4 @@ function importFromJsonFile(event) {
   fileReader.readAsText(event.target.files[0]);
 }
 
-// populateCategories();
 // showRandomQuote();
