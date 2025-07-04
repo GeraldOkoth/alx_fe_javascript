@@ -299,7 +299,7 @@ function showNotification(message, type = "info", actions = []) {
 
 // Notify on successful sync or update
 function notifyDataUpdated() {
-  showNotification("Quotes synced with server.", "success");
+  showNotification("Quotes synced with server!", "success");
 }
 
 // Conflict resolution UI
