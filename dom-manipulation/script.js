@@ -93,9 +93,9 @@ function addQuote() {
 
 const categoryFilter = document.getElementById("categoryFilter");
 function populateCategories() {
-  const uniqueCategories = [...new Set(quotes.map((q) => q.category))];
+  const selectedCategory = [...new Set(quotes.map((q) => q.category))];
   const lastSelected = localStorage.getItem("filter") || "all";
-  categoryFilter.innerHTML += uniqueCategories
+  categoryFilter.innerHTML += selectedCategory
     .map(
       (cat) =>
         `<option value="${cat}" ${
