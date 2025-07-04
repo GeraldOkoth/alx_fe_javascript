@@ -77,28 +77,32 @@ function addQuote() {
     list.classList.add("list-item");
     list.textContent = `${quote}: ${quoteCategory}`;
     quoteDisplay.appendChild(list);
-    // saveQuotes();
-    // populateCategories();
+    saveQuotes();
     quoteInput.value = "";
     categoryInput.value = "";
     alert("Quote added succesfully!");
   }
 }
 
-// function populateCategories() {
-//   const uniqueCategories = [...new Set(quotes.map((q) => q.category))];
-//   const lastSelected = localStorage.getItem("filter") || "all";
-//   quoteDisplay.innerHTML =
-//     '<option value="all">All Categories</option>' +
-//     uniqueCategories
-//       .map(
-//         (cat) =>
-//           `<option value="${cat}" ${
-//             lastSelected === cat ? "selected" : ""
-//           }>${cat}</option>`
-//       )
-//       .join("");
-// }
+function populateCategories() {
+  const uniqueCategories = [...new Set(quotes.map((q) => q.category))];
+  const lastSelected = localStorage.getItem("filter") || "all";
+  quoteDisplay.innerHTML =
+    '<option value="all">All Categories</option>' +
+    uniqueCategories
+      .map(
+        (cat) =>
+          `<option value="${cat}" ${
+            lastSelected === cat ? "selected" : ""
+          }>${cat}</option>`
+      )
+      .join("");
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  populateCategories();
+  showRandomQuote();
+});
 
 // function to show random quotes
 function showRandomQuote() {
@@ -115,41 +119,44 @@ function showRandomQuote() {
 
 document.getElementById("newQuote").addEventListener("click", showRandomQuote);
 
-// function filterQuotes() {
-//   const category = document.getElementById("categoryFilter").value;
-//   localStorage.setItem("filter", category);
-//   showRandomQuote();
-// }
+function filterQuotes() {
+  const category = document.getElementById("categoryFilter").value;
+  localStorage.setItem("filter", category);
+  showRandomQuote();
+}
 
-// function exportToJsonFile() {
-//   const blob = new Blob([JSON.stringify(quotes, null, 2)], {
-//     type: "application/json",
-//   });
-//   const url = URL.createObjectURL(blob);
-//   const a = document.createElement("a");
-//   a.href = url;
-//   a.download = "quotes.json";
-//   document.body.appendChild(a);
-//   a.click();
-//   document.body.removeChild(a);
-// }
+const exportQuote = document.getElementById("exportQuote");
+exportQuote;addEventListener("click", exportToJsonFile);
+function exportToJsonFile() {
+  const blob = new Blob([JSON.stringify(quotes, null, 2)], {
+    type: "application/json",
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "quotes.json";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
 
-// function importFromJsonFile(event) {
-//   const fileReader = new FileReader();
-//   fileReader.onload = function (e) {
-//     try {
-//       const importedQuotes = JSON.parse(e.target.result);
-//       if (!Array.isArray(importedQuotes)) throw new Error("Invalid format");
-//       quotes.push(...importedQuotes);
-//       saveQuotes();
-//       populateCategories();
-//       alert("Quotes imported successfully!");
-//     } catch {
-//       alert("Failed to import. Make sure the file is valid JSON.");
-//     }
-//   };
-//   fileReader.readAsText(event.target.files[0]);
-// }
+// upload json file
+function importFromJsonFile(event) {
+  const fileReader = new FileReader();
+  fileReader.onload = function (e) {
+    try {
+      const importedQuotes = JSON.parse(e.target.result);
+      if (!Array.isArray(importedQuotes)) throw new Error("Invalid format");
+      quotes.push(...importedQuotes);
+      saveQuotes();
+      populateCategories();
+      alert("Quotes imported successfully!");
+    } catch {
+      alert("Failed to import. Make sure the file is valid JSON.");
+    }
+  };
+  fileReader.readAsText(event.target.files[0]);
+}
 
 // populateCategories();
 // showRandomQuote();
