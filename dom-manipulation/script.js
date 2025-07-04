@@ -101,11 +101,11 @@ function populateCategories() {
 
 document.addEventListener("DOMContentLoaded", () => {
   populateCategories();
-  displayRandomQuote();
+  showRandomQuote();
 });
 
 // function to show random quotes
-function displayRandomQuote() {
+function showRandomQuote() {
   const filter = localStorage.getItem("filter") || "all";
   const filtered =
     filter === "all" ? quotes : quotes.filter((q) => q.quoteCategory === filter);
@@ -117,12 +117,12 @@ function displayRandomQuote() {
   quoteDisplay.innerText = `${random.quote} — ${random.quoteCategory}`;
 }
 
-document.getElementById("newQuote").addEventListener("click", displayRandomQuote);
+document.getElementById("newQuote").addEventListener("click", showRandomQuote);
 
 function filterQuotes() {
   const category = document.getElementById("categoryFilter").value;
   localStorage.setItem("filter", category);
-  displayRandomQuote();
+  showRandomQuote();
 }
 
 const exportQuote = document.getElementById("exportQuote");
@@ -159,4 +159,4 @@ function importFromJsonFile(event) {
 }
 
 // populateCategories();
-// displayRandomQuote();
+// showRandomQuote();
