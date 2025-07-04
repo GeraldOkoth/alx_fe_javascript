@@ -166,4 +166,239 @@ function importFromJsonFile(event) {
   fileReader.readAsText(event.target.files[0]);
 }
 
-// showRandomQuote();
+const API_URL = "https://jsonplaceholder.typicode.com/posts";
+
+// Simulate fetching quotes from mock API
+async function fetchQuotesFromServer() {
+  try {
+    const response = await fetch(API_URL + "?_limit=5");
+    const data = await response.json();
+    // Map mock API data to quote format
+    const apiQuotes = data.map(item => ({
+      text: item.title,
+      category: "API"
+    }));
+    // Add only new quotes
+    apiQuotes.forEach(apiQuote => {
+      if (!quotes.some(q => q.text === apiQuote.text)) {
+        quotes.push(apiQuote);
+      }
+    });
+    saveQuotes();
+    populateCategories();
+    showRandomQuote();
+  } catch (err) {
+    // Fail silently or show error
+  }
+}
+
+// Simulate posting a new quote to mock API
+async function postQuoteToAPI(quote) {
+  try {
+    await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: quote.text,
+        body: quote.category,
+        userId: 1
+      })
+    });
+    // No need to handle response for mock
+  } catch (err) {
+    // Fail silently or show error
+  }
+}
+
+// Periodically fetch new quotes every 30 seconds
+setInterval(fetchQuotesFromAPI, 30000);
+
+// Post new quote to API when added
+const originalAddQuote = addQuote;
+window.addQuote = function () {
+  const quoteInput = document.getElementById("newQuoteText");
+  const categoryInput = document.getElementById("newQuoteCategory");
+  const quote = quoteInput.value.trim();
+  const quoteCategory = categoryInput.value.trim();
+  if (quote && quoteCategory) {
+    postQuoteToAPI({ text: quote, category: quoteCategory });
+  }
+  originalAddQuote();
+};
+
+// Initial fetch on load
+fetchQuotesFromAPI();
+async function syncQuotesWithServer() {
+  try {
+    const response = await fetch(API_URL + "?_limit=5");
+    const serverData = await response.json();
+    const serverQuotes = serverData.map(item => ({
+      text: item.title,
+      category: "API"
+    }));
+
+    // Remove all local quotes with category "API"
+    quotes = quotes.filter(q => q.category !== "API");
+
+    // Add server quotes (server takes precedence)
+    quotes.push(...serverQuotes);
+
+    saveQuotes();
+    populateCategories();
+    showRandomQuote();
+  } catch (err) {
+    // Fail silently or show error
+  }
+}
+
+// Periodically sync with server every 30 seconds
+setInterval(syncQuotesWithServer, 30000);
+
+// Initial sync on load
+syncQuotesWithServer();
+/**
+ * Notification system for updates and conflicts
+ */
+function showNotification(message, type = "info", actions = []) {
+  let notif = document.getElementById("notification");
+  if (!notif) {
+    notif = document.createElement("div");
+    notif.id = "notification";
+    notif.style.position = "fixed";
+    notif.style.top = "20px";
+    notif.style.right = "20px";
+    notif.style.zIndex = "9999";
+    notif.style.padding = "16px";
+    notif.style.borderRadius = "6px";
+    notif.style.background = "#222";
+    notif.style.color = "#fff";
+    notif.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
+    notif.style.display = "flex";
+    notif.style.flexDirection = "column";
+    notif.style.gap = "8px";
+    document.body.appendChild(notif);
+  }
+  notif.innerHTML = `<span>${message}</span>`;
+  actions.forEach(({ label, onClick }) => {
+    const btn = document.createElement("button");
+    btn.textContent = label;
+    btn.style.marginTop = "6px";
+    btn.onclick = () => {
+      notif.style.display = "none";
+      onClick();
+    };
+    notif.appendChild(btn);
+  });
+  notif.style.display = "block";
+  setTimeout(() => {
+    if (!actions.length) notif.style.display = "none";
+  }, 3500);
+}
+
+// Notify on successful sync or update
+function notifyDataUpdated() {
+  showNotification("Quotes updated from server.", "success");
+}
+
+// Conflict resolution UI
+function resolveConflicts(localConflicts, serverConflicts) {
+  let index = 0;
+  function showNextConflict() {
+    if (index >= localConflicts.length) {
+      showNotification("All conflicts resolved.", "success");
+      saveQuotes();
+      populateCategories();
+      showRandomQuote();
+      return;
+    }
+    const local = localConflicts[index];
+    const server = serverConflicts[index];
+    showNotification(
+      `Conflict detected:<br>
+      <b>Local:</b> "${local.text}" (${local.category})<br>
+      <b>Server:</b> "${server.text}" (${server.category})<br>
+      Which version do you want to keep?`,
+      "warning",
+      [
+        {
+          label: "Keep Local",
+          onClick: () => {
+            quotes = quotes.filter(q => !(q.text === server.text && q.category === server.category));
+            quotes.push(local);
+            index++;
+            showNextConflict();
+          }
+        },
+        {
+          label: "Keep Server",
+          onClick: () => {
+            quotes = quotes.filter(q => !(q.text === local.text && q.category === local.category));
+            quotes.push(server);
+            index++;
+            showNextConflict();
+          }
+        }
+      ]
+    );
+  }
+  showNextConflict();
+}
+
+// Enhanced sync with conflict detection and notification
+async function enhancedSyncQuotesWithServer() {
+  try {
+    const response = await fetch(API_URL + "?_limit=5");
+    const serverData = await response.json();
+    const serverQuotes = serverData.map(item => ({
+      text: item.title,
+      category: "API"
+    }));
+
+    // Find conflicts: same text, different category
+    const localAPIQuotes = quotes.filter(q => q.category === "API");
+    const conflicts = [];
+    const serverConflicts = [];
+    localAPIQuotes.forEach(localQ => {
+      const match = serverQuotes.find(sq => sq.text === localQ.text && sq.category !== localQ.category);
+      if (match) {
+        conflicts.push(localQ);
+        serverConflicts.push(match);
+      }
+    });
+
+    // Remove all local API quotes
+    quotes = quotes.filter(q => q.category !== "API");
+
+    // Add server quotes (server takes precedence unless conflict)
+    serverQuotes.forEach(sq => {
+      if (!conflicts.some(c => c.text === sq.text)) {
+        quotes.push(sq);
+      }
+    });
+
+    if (conflicts.length) {
+      showNotification(
+        `Conflicts detected during sync. <b>${conflicts.length}</b> conflict(s) found.`,
+        "warning",
+        [
+          {
+            label: "Resolve Now",
+            onClick: () => resolveConflicts(conflicts, serverConflicts)
+          }
+        ]
+      );
+    } else {
+      notifyDataUpdated();
+      saveQuotes();
+      populateCategories();
+      showRandomQuote();
+    }
+  } catch (err) {
+    showNotification("Failed to sync with server.", "error");
+  }
+}
+
+// Replace previous sync function and interval
+clearInterval(window._syncInterval);
+window._syncInterval = setInterval(enhancedSyncQuotesWithServer, 30000);
+enhancedSyncQuotesWithServer();
