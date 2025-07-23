@@ -1,24 +1,44 @@
 <!DOCTYPE html>
-  <html lang="en">
+<html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dynamic Quote Generator</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="section">
-      <h1>Dynamic Quote Generator</h1>
-      <button type="button" id="CreateQuoteForm">Create Quote Form</button>
-      <button type="button" id="newQuote">Show New Quote</button>
-      <button type="button" id="exportQuote">Export Quotes</button>
-      <input type="file" id="importFile" accept=".json" title="Import quotes from a JSON file" onchange="importFromJsonFile(event)" />
-      <select id="categoryFilter" onchange="filterQuotes()">
-        <option value="all">All Categories</option>
-        <!-- Dynamically populated categories -->
-      </select>
-      <div id="quoteDisplay"></div>
-      <script src="script.js"></script>
-    </div>
+    <header>
+      <h2>Dynamic Quote Generator</h2>
+    </header>
+    <main class="main-section">
+      <aside>
+        <div class="side-menu">
+          <button type="button" id="CreateQuoteForm">Create Quote Form</button>
+          <button type="button" id="newQuote">Show New Quote</button>
+          <button type="button" id="exportQuote">Export Quotes</button>
+        </div>
+      </aside>
+
+      <article>
+        <div class="article-section">
+          <input
+            type="file"
+            id="importFile"
+            accept=".json"
+            title="Import quotes from a JSON file"
+            onchange="importFromJsonFile(event)"
+          />
+          <select title="select category" id="categoryFilter" onchange="filterQuotes()">
+            <option value="all">All Categories</option>
+            <!-- Dynamically populated categories -->
+          </select>
+        </div>
+        <div id="quoteDisplay"></div>
+      </article>
+    </main>
+    <footer class="my-footer">
+      <p>&copy; 2025. All rights reserved.</p>
+    </footer>
+    <script src="script.js"></script>
   </body>
-  </html>
+</html>
